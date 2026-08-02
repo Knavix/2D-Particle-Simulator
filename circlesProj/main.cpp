@@ -10,9 +10,6 @@
 
 
 
-
-
-
 int main() {
 	glfwInit();
 
@@ -28,43 +25,6 @@ int main() {
 		glfwTerminate();
 		return -1;
 	}
-
-	// Vertices of the triangle
-	/*GLfloat verticesOld[] = {
-		-0.50f, -0.50f, 0.0f, //	Point: 0
-		 0.50f, -0.50f, 0.0f, //	Point: 1
-		 0.00f,  0.23f, 0.0f, //	Point: 2
-		-0.257f,-0.15f, 0.0f, //	Point: 3
-		 0.00f, -0.50f, 0.0f, //	Point: 4
-		 0.257f,-0.15f, 0.0f, //	Point: 5
-		-0.38f, -0.33f, 0.0f, //	Point: 6
-		-0.26f, -0.50f, 0.0f, //	Point: 7
-		-0.13f, -0.33f, 0.0f, //	Point: 8
-		 0.13f, -0.33f, 0.0f, //	Point: 9
-		 0.26f, -0.50f, 0.0f, //	Point: 10
-		 0.38f, -0.33f, 0.0f, //	Point: 11
-		 0.00f, -0.15f, 0.0f, //	Point: 12
-		 0.13f,  0.04f, 0.0f, //	Point: 13
-		 -0.13f, 0.04f, 0.0f  //	Point: 14
-	};*/
-	// Order of indices to be drawn
-	/*GLuint indicesOld[] = {
-
-		0, 7, 6,   // Triangle: 1
-		7, 4, 8,   // Triangle: 2
-		6, 8, 3,   // Triangle: 3 (Directly above 1 and 2)
-
-		4, 10, 9,  // Triangle: 4
-		10, 1, 11, // Triangle: 5
-		9, 11, 5,  // Triangle: 7 (Directly above 4 and 5
-
-		8, 9, 12,  // Triangle: 6
-
-		3, 12, 14, // Triangle: 8
-		12, 5, 13, // Triangle: 9
-		14, 13, 2  // Triangle: 10
-
-	};*/
 
 	// Dynamic storage for vertex information
 	std::vector<float> vertices;
