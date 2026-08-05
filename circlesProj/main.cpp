@@ -88,14 +88,33 @@ int main() {
 	VBO1.Unbind();
 	EBO1.Unbind();
 
+	float xOffset = 0.0f;
+	float yOffset = 0.0f;
+	float xVelocity = 0.5f;
+	float yVelocity = 0.5f;
+
+	float previousTime = glfwGetTime();
+	float deltaTime = 0.0f;
+
+
+
 	// Window loop happening every frame
 	while (!glfwWindowShouldClose(window)) {
 		// The color of the background
 		glClearColor(158 / 255.0f, 185 / 255.0f, 240 / 255.0f, 1.0f);
 		// Clears back buffer and replaces with previously established color
 		glClear(GL_COLOR_BUFFER_BIT);
-		// Activates the shaderprogram
+		// Selects the shaderprogram
 		shaderOne.use();
+
+		float currentTime = glfwGetTime();
+		deltaTime = currentTime - previousTime;
+		previousTime = currentTime;
+
+		xOffset += xVelocity * deltaTime;
+		yOffset += yVelocity * deltaTime;
+
+		shaderOne.setVec2("uOffset", xOffset, yOffset);
 		// Selects the specific VAO containing the config for reading vertex data
 		VAO1.Bind();
 		// The big function that actually "draws" from the data ha
