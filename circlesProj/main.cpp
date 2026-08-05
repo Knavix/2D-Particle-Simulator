@@ -7,6 +7,8 @@
 #include "VBO.h"
 #include "EBO.h"
 #include "VAO.h"
+#include "Circle.h"
+
 
 
 
@@ -34,6 +36,16 @@ int main() {
 	int n = 50;
 	float pi = 3.14159265f;
 	float radius = 0.5f;
+
+	// -----Circle -------
+	
+	Circle circle;
+	circle.setRadius(radius);
+	circle.x = 0.0f;
+	circle.y = 0.0f;
+	circle.xVelocity = 0.5f;
+	circle.yVelocity = 0.35f;
+
 	// Arc distance between each point
 	float deltaTheta = 2.0f * pi / n;
 
@@ -88,10 +100,7 @@ int main() {
 	VBO1.Unbind();
 	EBO1.Unbind();
 
-	float xOffset = 0.0f;
-	float yOffset = 0.0f;
-	float xVelocity = 0.5f;
-	float yVelocity = 0.5f;
+	// ------------Circle Offset -------------
 
 	float previousTime = glfwGetTime();
 	float deltaTime = 0.0f;
@@ -111,10 +120,27 @@ int main() {
 		deltaTime = currentTime - previousTime;
 		previousTime = currentTime;
 
-		xOffset += xVelocity * deltaTime;
-		yOffset += yVelocity * deltaTime;
+		circle.x += circle.xVelocity * deltaTime;
+		circle.y += circle.yVelocity * deltaTime;
 
-		shaderOne.setVec2("uOffset", xOffset, yOffset);
+		if (circle.x + radius >= 1.0f) {
+			circle.x = 1.0f - radius;
+			circle.xVelocity = -circle.xVelocity;
+		}
+		if (circle.x - radius <= -1.0f) {
+			circle.x = -1.0f + radius;
+			circle.xVelocity = -circle.xVelocity;
+		}
+		if (circle.y + radius >= 1.0f) {
+			circle.y = 1.0f - radius;
+			circle.yVelocity = -circle.yVelocity;
+		}
+		if (circle.y - radius <= -1.0f) {
+			circle.y = -1.0f + radius;
+			circle.yVelocity = -circle.yVelocity;
+		}
+
+		shaderOne.setVec2("uOffset", circle.x, circle.y);
 		// Selects the specific VAO containing the config for reading vertex data
 		VAO1.Bind();
 		// The big function that actually "draws" from the data ha
