@@ -12,5 +12,14 @@ struct Circle {
 
 	void setRadius(float radius);
 
+	void handleWallCollisions(
+		float leftWall,
+		float rightWall,
+		float topWall,
+		float bottomWall
+	);
 };
+
+
+
 #endif

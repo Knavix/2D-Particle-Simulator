@@ -8,6 +8,7 @@
 #include "EBO.h"
 #include "VAO.h"
 #include "Circle.h"
+#include "Collision.h"
 
 
 
@@ -32,19 +33,27 @@ int main() {
 	std::vector<float> vertices;
 	std::vector<unsigned int> indices;
 
-	// Number of triangles
+	// n = Number of triangles
 	int n = 50;
 	float pi = 3.14159265f;
-	float radius = 0.5f;
+	float radius = 0.3f;
 
 	// -----Circle -------
 	
-	Circle circle;
-	circle.setRadius(radius);
-	circle.x = 0.0f;
-	circle.y = 0.0f;
-	circle.xVelocity = 0.5f;
-	circle.yVelocity = 0.35f;
+	Circle circle1;
+
+	circle1.x = -0.50f;
+	circle1.y = 0.0f;
+	circle1.setRadius(radius);
+	circle1.xVelocity = 0.7f;
+	circle1.yVelocity = 0.3f;
+
+	Circle circle2;
+	circle2.x = 0.5f;
+	circle2.y = 0.0f;
+	circle2.setRadius(radius);
+	circle2.xVelocity = -0.4f;
+	circle2.yVelocity = -0.8f;
 
 	// Arc distance between each point
 	float deltaTheta = 2.0f * pi / n;
@@ -120,30 +129,28 @@ int main() {
 		deltaTime = currentTime - previousTime;
 		previousTime = currentTime;
 
-		circle.x += circle.xVelocity * deltaTime;
-		circle.y += circle.yVelocity * deltaTime;
+		circle1.x += circle1.xVelocity * deltaTime;
+		circle1.y += circle1.yVelocity * deltaTime;
 
-		if (circle.x + radius >= 1.0f) {
-			circle.x = 1.0f - radius;
-			circle.xVelocity = -circle.xVelocity;
-		}
-		if (circle.x - radius <= -1.0f) {
-			circle.x = -1.0f + radius;
-			circle.xVelocity = -circle.xVelocity;
-		}
-		if (circle.y + radius >= 1.0f) {
-			circle.y = 1.0f - radius;
-			circle.yVelocity = -circle.yVelocity;
-		}
-		if (circle.y - radius <= -1.0f) {
-			circle.y = -1.0f + radius;
-			circle.yVelocity = -circle.yVelocity;
-		}
+		circle2.x += circle2.xVelocity * deltaTime;
+		circle2.y += circle2.yVelocity * deltaTime;
 
-		shaderOne.setVec2("uOffset", circle.x, circle.y);
+		circle1.handleWallCollisions(-1.0f, 1.0f, 1.0f, -1.0f);
+		circle2.handleWallCollisions(-1.0f, 1.0f, 1.0f, -1.0f);
+		int collisionNumb = 0;
+		collisionNumb++;
+		if (areCirclesColliding(circle1, circle2)) {
+			repelCircles(circle1, circle2);
+			std::cout << "Collision! " << collisionNumb++<<"\n";
+		}
+		collisionNumb = 5;
+		shaderOne.setVec2("uOffset", circle1.x, circle1.y);
 		// Selects the specific VAO containing the config for reading vertex data
 		VAO1.Bind();
 		// The big function that actually "draws" from the data ha
+		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+
+		shaderOne.setVec2("uOffset", circle2.x, circle2.y);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		// Swaps the back and front buffers for the next frame to be shown
 		glfwSwapBuffers(window);
