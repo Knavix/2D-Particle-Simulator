@@ -36,11 +36,45 @@ int main() {
 	// n = Number of triangles
 	int n = 50;
 	float pi = 3.14159265f;
-	float radius = 0.3f;
+	float radius = 0.01f;
+
+	// ----Circle Vector---
+	std::vector<Circle> circles;
+/*	Circle circle;
+	circle.x = -0.5f;
+	circle.y = 0.0f;
+	circle.setRadius(radius);
+	circle.xVelocity = 0.7f;
+	circle.yVelocity = 0.3f;
+
+	circles.push_back(circle);*/
+
+	float circleCount = 1000;
+	int columns = static_cast<int>(std::ceil(std::sqrt(circleCount)));
+	float spacing = 1.6f / columns;
+
+	// --- Multi-Circle Loop ---
+	
+	for (int i = 0; i < circleCount; i++) {
+		Circle circle;
+		int column = i % columns;
+		int row = i / columns;
+
+		float velocityRange = -0.7f;
+		float xRandom = velocityRange + static_cast<float>(rand()) / RAND_MAX;
+		float yRandom = velocityRange + static_cast<float>(rand()) / RAND_MAX;
+
+		circle.x = -0.8f + column * spacing;
+		circle.y = -0.8 + row * spacing;
+		circle.setRadius(radius);
+		circle.xVelocity = xRandom;
+		circle.yVelocity = yRandom;
+
+		circles.push_back(circle);
+	}
 
 	// -----Circle -------
-	
-	Circle circle1;
+	/*Circle circle1;
 
 	circle1.x = -0.50f;
 	circle1.y = 0.0f;
@@ -53,7 +87,7 @@ int main() {
 	circle2.y = 0.0f;
 	circle2.setRadius(radius);
 	circle2.xVelocity = -0.4f;
-	circle2.yVelocity = -0.8f;
+	circle2.yVelocity = -0.8f;*/
 
 	// Arc distance between each point
 	float deltaTheta = 2.0f * pi / n;
@@ -129,29 +163,51 @@ int main() {
 		deltaTime = currentTime - previousTime;
 		previousTime = currentTime;
 
-		circle1.x += circle1.xVelocity * deltaTime;
+		/*circle1.x += circle1.xVelocity * deltaTime;
 		circle1.y += circle1.yVelocity * deltaTime;
 
 		circle2.x += circle2.xVelocity * deltaTime;
-		circle2.y += circle2.yVelocity * deltaTime;
+		circle2.y += circle2.yVelocity * deltaTime;*/
 
-		circle1.handleWallCollisions(-1.0f, 1.0f, 1.0f, -1.0f);
-		circle2.handleWallCollisions(-1.0f, 1.0f, 1.0f, -1.0f);
+		for (Circle& circle : circles) {
+			circle.x += circle.xVelocity * deltaTime;
+			circle.y += circle.yVelocity * deltaTime;
+
+			circle.handleWallCollisions(-1.0f, 1.0f, 1.0f, -1.0f);
+		}
+
+		//circle1.handleWallCollisions(-1.0f, 1.0f, 1.0f, -1.0f);
+		//circle2.handleWallCollisions(-1.0f, 1.0f, 1.0f, -1.0f);
 		int collisionNumb = 0;
 		collisionNumb++;
-		if (areCirclesColliding(circle1, circle2)) {
+
+		for (int i = 0; i < circles.size(); i++) {
+			for (int j = i + 1; j < circles.size(); j++) {
+				if (areCirclesColliding(circles[i], circles[j])) {
+					repelCircles(circles[i], circles[j]);
+				}
+			}
+		}
+
+		/*if (areCirclesColliding(circle1, circle2)) {
 			repelCircles(circle1, circle2);
 			std::cout << "Collision! " << collisionNumb++<<"\n";
-		}
+		}*/
 		collisionNumb = 5;
-		shaderOne.setVec2("uOffset", circle1.x, circle1.y);
 		// Selects the specific VAO containing the config for reading vertex data
 		VAO1.Bind();
-		// The big function that actually "draws" from the data ha
-		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 
-		shaderOne.setVec2("uOffset", circle2.x, circle2.y);
-		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+		for (Circle& circle : circles) {
+			shaderOne.setVec2("uOffset", circle.x, circle.y);
+			glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+		}
+		//shaderOne.setVec2("uOffset", circle1.x, circle1.y);
+		
+		// The big function that actually "draws" from the data ha
+		//glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+
+		//shaderOne.setVec2("uOffset", circle2.x, circle2.y);
+		//glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		// Swaps the back and front buffers for the next frame to be shown
 		glfwSwapBuffers(window);
 		// Handles glfw events
