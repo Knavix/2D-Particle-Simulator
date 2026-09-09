@@ -9,6 +9,7 @@ struct Circle {
 
 	float xVelocity;
 	float yVelocity;
+	float mass;
 
 	void setRadius(float radius);
 

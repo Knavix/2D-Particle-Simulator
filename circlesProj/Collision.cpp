@@ -42,9 +42,19 @@ void repelCircles(Circle& circle1, Circle& circle2) {
 	float velocity1AlongTangent = circle1.xVelocity * xTangent + circle1.yVelocity * yTangent;
 	float velocity2AlongTangent = circle2.xVelocity * xTangent + circle2.yVelocity * yTangent;
 
-	// New velocities
-	float newVelocity1AlongNormal = velocity2AlongNormal;
-	float newVelocity2AlongNormal = velocity1AlongNormal;
+	float massTotal = circle1.mass + circle2.mass;
+	float massDifference1 = circle1.mass - circle2.mass;
+	float massDifference2 = circle2.mass - circle1.mass;
+
+	float newVelocity1AlongNormal =
+		(massDifference1 / massTotal) * velocity1AlongNormal 
+		+
+		((2.0f * circle2.mass) / (massTotal)) * velocity2AlongNormal;
+
+	float newVelocity2AlongNormal =
+		(massDifference2 / massTotal) * velocity2AlongNormal 
+		+
+		((2.0f * circle1.mass) / (massTotal)) * velocity1AlongNormal;
 
 	circle1.x += overlap * xNormal;
 	circle1.y += overlap * yNormal;
@@ -59,6 +69,4 @@ void repelCircles(Circle& circle1, Circle& circle2) {
 
 	circle2.xVelocity = newVelocity2AlongNormal * xNormal + velocity2AlongTangent * xTangent;
 	circle2.yVelocity = newVelocity2AlongNormal * yNormal + velocity2AlongTangent * yTangent;
-
-	std::cout << "Repelling circles";
 }

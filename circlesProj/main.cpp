@@ -22,7 +22,7 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Creating window
-	GLFWwindow* window = glfwCreateWindow(800, 800, "My Window", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(800, 800, "2D Particle Simulator", NULL, NULL);
 	if (window == NULL) {
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
@@ -36,20 +36,13 @@ int main() {
 	// n = Number of triangles
 	int n = 50;
 	float pi = 3.14159265f;
-	float radius = 0.01f;
+	float radius = 1.0f;
 
 	// ----Circle Vector---
 	std::vector<Circle> circles;
-/*	Circle circle;
-	circle.x = -0.5f;
-	circle.y = 0.0f;
-	circle.setRadius(radius);
-	circle.xVelocity = 0.7f;
-	circle.yVelocity = 0.3f;
+	// ------------------------ Number of Circles --------------------//
+	float circleCount = 700;
 
-	circles.push_back(circle);*/
-
-	float circleCount = 1000;
 	int columns = static_cast<int>(std::ceil(std::sqrt(circleCount)));
 	float spacing = 1.6f / columns;
 
@@ -64,30 +57,20 @@ int main() {
 		float xRandom = velocityRange + static_cast<float>(rand()) / RAND_MAX;
 		float yRandom = velocityRange + static_cast<float>(rand()) / RAND_MAX;
 
+		float minRadius = 0.01f;
+		float maxRadius = 0.03f;
+		float randomValueRadius = static_cast<float>(rand()) / RAND_MAX;
+		float randomRadius = minRadius + randomValueRadius * (maxRadius - minRadius);
+
+		circle.setRadius(randomRadius);
+		circle.mass = randomRadius * randomRadius;
 		circle.x = -0.8f + column * spacing;
 		circle.y = -0.8 + row * spacing;
-		circle.setRadius(radius);
 		circle.xVelocity = xRandom;
 		circle.yVelocity = yRandom;
 
 		circles.push_back(circle);
 	}
-
-	// -----Circle -------
-	/*Circle circle1;
-
-	circle1.x = -0.50f;
-	circle1.y = 0.0f;
-	circle1.setRadius(radius);
-	circle1.xVelocity = 0.7f;
-	circle1.yVelocity = 0.3f;
-
-	Circle circle2;
-	circle2.x = 0.5f;
-	circle2.y = 0.0f;
-	circle2.setRadius(radius);
-	circle2.xVelocity = -0.4f;
-	circle2.yVelocity = -0.8f;*/
 
 	// Arc distance between each point
 	float deltaTheta = 2.0f * pi / n;
@@ -126,8 +109,6 @@ int main() {
 	// Creates a shader object that links and compiles given shader code
 	Shader shaderOne("shader.vs", "shader.frag");
 
-
-
 	// Generates Vertex Array object and binds it
 	VAO VAO1;
 	VAO1.Bind();
@@ -149,8 +130,8 @@ int main() {
 	float deltaTime = 0.0f;
 
 
+	// -------------------------  MAIN LOOP  --------------------------//
 
-	// Window loop happening every frame
 	while (!glfwWindowShouldClose(window)) {
 		// The color of the background
 		glClearColor(158 / 255.0f, 185 / 255.0f, 240 / 255.0f, 1.0f);
@@ -163,11 +144,6 @@ int main() {
 		deltaTime = currentTime - previousTime;
 		previousTime = currentTime;
 
-		/*circle1.x += circle1.xVelocity * deltaTime;
-		circle1.y += circle1.yVelocity * deltaTime;
-
-		circle2.x += circle2.xVelocity * deltaTime;
-		circle2.y += circle2.yVelocity * deltaTime;*/
 
 		for (Circle& circle : circles) {
 			circle.x += circle.xVelocity * deltaTime;
@@ -176,8 +152,6 @@ int main() {
 			circle.handleWallCollisions(-1.0f, 1.0f, 1.0f, -1.0f);
 		}
 
-		//circle1.handleWallCollisions(-1.0f, 1.0f, 1.0f, -1.0f);
-		//circle2.handleWallCollisions(-1.0f, 1.0f, 1.0f, -1.0f);
 		int collisionNumb = 0;
 		collisionNumb++;
 
@@ -189,25 +163,16 @@ int main() {
 			}
 		}
 
-		/*if (areCirclesColliding(circle1, circle2)) {
-			repelCircles(circle1, circle2);
-			std::cout << "Collision! " << collisionNumb++<<"\n";
-		}*/
 		collisionNumb = 5;
 		// Selects the specific VAO containing the config for reading vertex data
 		VAO1.Bind();
 
 		for (Circle& circle : circles) {
 			shaderOne.setVec2("uOffset", circle.x, circle.y);
+			shaderOne.setFloat("uScale", circle.radius);
 			glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		}
-		//shaderOne.setVec2("uOffset", circle1.x, circle1.y);
-		
-		// The big function that actually "draws" from the data ha
-		//glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 
-		//shaderOne.setVec2("uOffset", circle2.x, circle2.y);
-		//glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		// Swaps the back and front buffers for the next frame to be shown
 		glfwSwapBuffers(window);
 		// Handles glfw events
