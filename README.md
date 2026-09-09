@@ -2,7 +2,6 @@
 
 A real-time 2D particle physics simulator built in C++ using OpenGL and GLFW.
 
-## Demo
 
 ## Demo
 
