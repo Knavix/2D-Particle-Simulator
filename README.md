@@ -4,14 +4,9 @@ A real-time 2D particle physics simulator built in C++ using OpenGL and GLFW.
 
 ## Demo
 
-### Uncropped
-![800 Circles](demo/uncroppedDemo.gif)
+### CROPPED!
+![800 Circles](demo/demo-100.gif)
 
-### Croppped
-![100 Circles](demo/croppedDemo.gif)
-
-### Croppped Again
-![100 Circles](demo/croppedAgain.mp4)
 
 ## Features
 
