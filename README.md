@@ -1,6 +1,6 @@
 # 2D Particle Simulator
 
-A real-time 2D particle physics simulator built in C++ using OpenGL and GLFW.
+A real-time 2D particle physics simulator built in C++ using OpenGL and GLFW, featuring custom collision detection, collision response, and GPU-based rendering.
 
 
 ## Demo
@@ -27,12 +27,11 @@ A real-time 2D particle physics simulator built in C++ using OpenGL and GLFW.
 
 ## Features
 
-- Simulates many moving particles in real time
-- Particle-to-particle collision detection
-- Wall collision detection
-- Collision response using vector mathematics
-- Delta-time-based movement
-- GPU rendering with OpenGL shaders
+- Simulates up to 800 moving particles in real time
+- Implements particle-to-particle and wall collision detection
+- Resolves collisions using vector-based physics
+- Renders each circle from scratch as a triangle fan composed of 50 triangles
+- Uses OpenGL shaders and GPU rendering for drawing and animation
 
 ## Technologies
 
