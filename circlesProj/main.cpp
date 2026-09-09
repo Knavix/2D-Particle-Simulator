@@ -41,7 +41,7 @@ int main() {
 	// ----Circle Vector---
 	std::vector<Circle> circles;
 	// ------------------------ Number of Circles --------------------//
-	float circleCount = 700;
+	float circleCount = 800;
 
 	int columns = static_cast<int>(std::ceil(std::sqrt(circleCount)));
 	float spacing = 1.6f / columns;
