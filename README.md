@@ -10,6 +10,9 @@ A real-time 2D particle physics simulator built in C++ using OpenGL and GLFW.
 ### Croppped
 ![100 Circles](demo/croppedDemo.gif)
 
+### Croppped Again
+![100 Circles](demo/croppedAgain.mp4)
+
 ## Features
 
 - Simulates many moving particles in real time
